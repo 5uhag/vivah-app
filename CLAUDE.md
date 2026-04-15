@@ -1,138 +1,149 @@
-# Vivah App — Claude Code Reference
+# PyaarMatch 💕 — Claude Code Reference
 
-## Project Overview
-A modern Indian matrimonial web application built with Next.js 15 (App Router). The name "Vivah" means "marriage" in Sanskrit/Hindi.
+## Brand & Theme
+- **Name:** PyaarMatch 💕
+- **Primary color:** `#E91E8C` (hot pink)
+- **Accent color:** `#F8A4C8` (baby pink)
+- **Overlay:** `bg-pink-950/40` on all backgrounds
+- **Cards:** `bg-white/20 backdrop-blur-md rounded-2xl border border-white/10`
+- **Buttons:** `rounded-full` with `bg-[#E91E8C]` hot pink
+- **Every page** has a unique full-viewport Unsplash background image + `bg-pink-950/40` overlay
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 15 (App Router, `src/` directory) |
+| Framework | Next.js 16.2.3 (App Router, `src/` dir) |
 | Language | TypeScript (strict) |
-| Styling | Tailwind CSS v4 + Shadcn UI |
-| Auth | Clerk (`@clerk/nextjs`) |
+| Styling | Tailwind CSS v4 + Shadcn UI (base-ui primitives) |
+| Auth | Clerk (`@clerk/nextjs` v7) |
 | Database | Supabase (PostgreSQL + Realtime) |
-| i18n | next-intl |
+| SSR Client | `@supabase/ssr` |
+| i18n | next-intl v4 |
 | Icons | lucide-react |
-| Payments | Razorpay (to be integrated) |
+| Webhooks | svix (Clerk webhook verification) |
 
-## Design Rules (MUST follow on every page)
-1. **Full-page background image** from Unsplash — each page gets its own unique image
-2. **Semi-transparent dark gradient overlay** on top for text readability (`bg-black/50` or similar)
-3. **Mobile-first**, fully responsive (Tailwind breakpoints: sm, md, lg, xl)
-4. **Color theme**: deep red `#C0392B` + gold `#F39C12` + white
+## All 20 Pages — Built ✅
 
-## Environment Variables Required
-```
-# Clerk
+### Public
+| # | Route | File | Description |
+|---|-------|------|-------------|
+| 1 | `/` | `src/app/page.tsx` | Landing — hero, stats, 6 feature cards, 3 story previews, footer |
+| 2 | `/login` | `src/app/login/page.tsx` | Clerk `<SignIn />` with pink branded overlay |
+| 3 | `/register` | `src/app/register/page.tsx` | Clerk `<SignUp />` with pink branded overlay |
+| 4 | `/stories` | `src/app/stories/page.tsx` | 4 story cards + submit modal (Dialog) |
+
+### Protected
+| # | Route | File | Description |
+|---|-------|------|-------------|
+| 5 | `/dashboard` | `src/app/dashboard/page.tsx` | Stats, online users, AI match grid, profile completion nudge |
+| 6 | `/onboarding` | `src/app/onboarding/page.tsx` | 5-step wizard: Personal → Background → Career → Preferences → Photos |
+| 7 | `/search` | `src/app/search/page.tsx` | Filter sidebar (age slider, religion, profession), AI badge cards, pagination |
+| 8 | `/profile/[id]` | `src/app/profile/[id]/page.tsx` | Photo, tabs (Personal/Education/Job/Family), photo grid, Send Interest/Chat/Contact |
+| 9 | `/profile/edit` | `src/app/profile/edit/page.tsx` | Tabs (Personal/Education/Job/Family/Photos), completion %, photo upload grid |
+| 10 | `/interests` | `src/app/interests/page.tsx` | Tabs: Received (Accept/Reject) / Sent (status badge) / Accepted — expiry countdown |
+| 11 | `/chat` | `src/app/chat/page.tsx` | Conversation list, search bar, unread badges, online dots |
+| 12 | `/chat/[id]` | `src/app/chat/[id]/page.tsx` | Real-time chat — sent (pink right) / received (dark left), fixed input + send |
+| 13 | `/contacts` | `src/app/contacts/page.tsx` | Credits counter, locked/unlocked contact cards, profile viewers section |
+| 14 | `/notifications` | `src/app/notifications/page.tsx` | Typed notifs (match/interest/message/system), mark all read, unread pink border |
+| 15 | `/subscription` | `src/app/subscription/page.tsx` | Free / Premium ₹999 / Gold ₹1999 plan cards, Razorpay placeholder |
+| 16 | `/settings` | `src/app/settings/page.tsx` | Sections: Account / Privacy / Notifications / Security — toggles, password form, 2FA, delete tooltip |
+| 17 | `/history` | `src/app/history/page.tsx` | Match History (status badges) + Favourites grid, success rate stat |
+| 18 | `/admin` | `src/app/admin/page.tsx` | Stats cards, Users table (verify toggle), Reports (resolve), Stories (approve/reject) |
+
+### System
+| # | File | Description |
+|---|------|-------------|
+| 19 | `src/app/not-found.tsx` | Custom 404 with nav links |
+| 20 | `src/app/error.tsx` | Error boundary with retry + home |
+| — | `src/app/loading.tsx` | Global spinner overlay |
+| — | `src/app/api/webhooks/clerk/route.ts` | `user.created` → insert profile, `user.deleted` → delete profile |
+
+## Auth Flow
+1. Sign up → `/register` → Clerk
+2. `user.created` webhook → `POST /api/webhooks/clerk` → Supabase `profiles` insert
+3. `proxy.ts` middleware protects all routes except `/`, `/login`, `/register`, `/stories`
+4. New users redirect to `/onboarding` → after completion → `/dashboard`
+
+## Environment Variables
+```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
+CLERK_WEBHOOK_SECRET=
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/register
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
 
-# Supabase
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
-
-# next-intl
-NEXT_PUBLIC_DEFAULT_LOCALE=en
 ```
 
-## Directory Structure
-```
-vivah-app/
-├── src/
-│   ├── app/                    # App Router pages
-│   │   ├── [locale]/           # i18n locale wrapper
-│   │   │   ├── (public)/       # Public routes (no auth required)
-│   │   │   │   ├── page.tsx            # Landing page
-│   │   │   │   ├── login/page.tsx      # Login
-│   │   │   │   ├── register/page.tsx   # Registration
-│   │   │   │   └── stories/page.tsx    # Success stories (public)
-│   │   │   └── (protected)/    # Auth-protected routes
-│   │   │       ├── dashboard/page.tsx
-│   │   │       ├── onboarding/page.tsx
-│   │   │       ├── profiles/page.tsx
-│   │   │       ├── profiles/[id]/page.tsx
-│   │   │       ├── interests/page.tsx
-│   │   │       ├── messages/page.tsx
-│   │   │       ├── messages/[id]/page.tsx
-│   │   │       ├── notifications/page.tsx
-│   │   │       ├── premium/page.tsx
-│   │   │       ├── settings/page.tsx
-│   │   │       ├── settings/privacy/page.tsx
-│   │   │       └── admin/page.tsx
-│   ├── components/
-│   │   ├── ui/                 # Shadcn UI components
-│   │   ├── layout/             # Navbar, Footer, Sidebar
-│   │   └── shared/             # Reusable app components
-│   ├── lib/
-│   │   ├── supabase.ts         # Supabase clients
-│   │   └── utils.ts            # Shadcn utils
-│   └── middleware.ts           # Clerk auth middleware
-├── supabase/
-│   └── schema.sql              # Full PostgreSQL schema
-├── messages/                   # next-intl translation files
-│   ├── en.json
-│   └── hi.json
-└── public/
-```
+## Shadcn UI Components Installed
+`avatar` `badge` `button` `card` `dialog` `input` `label` `progress` `select` `separator` `sheet` `slider` `switch` `table` `tabs` `textarea` `tooltip`
 
-## All 20 Pages
+> All use `@base-ui/react` primitives. Does NOT support `asChild` prop — pass className directly to `DialogTrigger` / `TooltipTrigger`.
 
-### Public (no auth required)
-1. **`/` — Landing Page**: Hero section, tagline, CTA to register. Full-page wedding background.
-2. **`/login` — Login**: Clerk SignIn component with branded overlay.
-3. **`/register` — Register**: Clerk SignUp component with branded overlay.
-4. **`/stories` — Success Stories**: Grid of approved couple stories. Heartwarming background.
+## Database Schema (`supabase/schema.sql`)
+| Table | Key Columns |
+|-------|-------------|
+| `profiles` | `id`, `clerk_id`, `full_name`, `gender`, `dob`, `phone`, `location`, `religion`, `caste`, `profession`, `education`, `about`, `profile_photo`, `photos[]`, `completion_score`, `is_verified`, `is_premium`, `credits`, `language`, `is_hidden`, `online_status` |
+| `interests` | `id`, `sender_id→profiles`, `receiver_id→profiles`, `status`, `icebreaker`, `expires_at` |
+| `messages` | `id`, `sender_id→profiles`, `receiver_id→profiles`, `content`, `is_read` |
+| `notifications` | `id`, `user_id→profiles`, `type`, `message`, `is_read` |
+| `reports` | `id`, `reporter_id→profiles`, `reported_id→profiles`, `reason`, `status` |
+| `success_stories` | `id`, `user1_id→profiles`, `user2_id→profiles`, `story`, `photo`, `is_approved` |
+| `subscriptions` | `id`, `user_id→profiles`, `plan`, `razorpay_order_id`, `expires_at` |
+| `profile_views` | `id`, `viewer_id→profiles`, `viewed_id→profiles`, `viewed_at` |
 
-### Protected (auth required via Clerk middleware)
-5. **`/dashboard` — Dashboard**: Match recommendations feed, quick stats, online users. Warm-tone background.
-6. **`/onboarding` — Onboarding**: Multi-step profile creation wizard (personal info → photos → preferences).
-7. **`/profiles` — Browse Profiles**: Filterable profile grid (religion, caste, location, age). Elegant background.
-8. **`/profiles/[id]` — Profile Detail**: Full profile view, send interest, icebreaker, report.
-9. **`/interests` — My Interests**: Tabs for sent/received interests with accept/reject actions.
-10. **`/messages` — Inbox**: List of conversations with unread badges. Realtime via Supabase.
-11. **`/messages/[id]` — Chat**: Real-time chat UI with message bubbles. Supabase Realtime subscription.
-12. **`/notifications` — Notifications**: All alerts (interest received, accepted, new message, etc.).
-13. **`/premium` — Premium Plans**: Pricing cards (Basic / Gold / Platinum). Razorpay integration.
-14. **`/settings` — Account Settings**: Edit profile info, photo upload, language selector.
-15. **`/settings/privacy` — Privacy Settings**: Toggle profile visibility, block list, data controls.
-16. **`/admin` — Admin Panel**: Verify profiles, moderate reports, approve stories, manage users.
-
-### Utility / System Pages (implicit)
-17. **`/not-found`** — Custom 404 page
-18. **`/error`** — Error boundary page
-19. **`/loading`** — Global loading skeleton
-20. **`/api/webhooks/clerk`** — Clerk webhook to auto-create Supabase profile on sign-up
-
-## Database Schema (supabase/schema.sql)
-- **profiles** — Core user data (clerk_id FK, demographics, photos, premium status, credits)
-- **interests** — Connection requests between users (pending/accepted/rejected/expired)
-- **messages** — Direct messages with read receipts
-- **notifications** — In-app notification feed
-- **reports** — User report/moderation queue
-- **success_stories** — Approved couple testimonials
-- **subscriptions** — Premium plan purchase records (Razorpay)
-- **profile_views** — Track who viewed whose profile
-
-## Auth Flow
-1. User signs up via Clerk → `/register`
-2. Clerk webhook fires → creates row in `profiles` table with `clerk_id`
-3. Middleware redirects new users to `/onboarding` to complete profile
-4. After onboarding, redirects to `/dashboard`
-
-## i18n
-- Supported locales: `en` (English), `hi` (Hindi)
-- Translation files in `/messages/`
-- next-intl configured in `next.config.ts`
+## Supabase Clients (`src/lib/supabase.ts`)
+- `supabase` — browser client (nullable, use in `"use client"` components)
+- `supabaseAdmin` — server/admin client (nullable, use in Server Components / API routes)
+- Both return `null` if env vars are not set (safe for build without env)
 
 ## Key Conventions
-- Server Components by default; add `"use client"` only when needed
-- Supabase browser client for client components, admin client for server actions
-- All Supabase queries go through typed helpers in `src/lib/`
-- Image uploads go to Supabase Storage bucket `profile-photos`
-- Use Shadcn components from `src/components/ui/`
+- Server Components by default; add `"use client"` when using state, events, or browser APIs
+- `Select.onValueChange` callback receives `string | null` — always use `(v) => set(v ?? "default")`
+- `Slider.onValueChange` callback receives `number | readonly number[]` — cast with `Array.isArray(v) ? [...v] : [v as number]`
+- `DialogTrigger` / `TooltipTrigger` do NOT support `asChild` — apply className directly
+- Images from Unsplash require `next.config.ts` remote pattern for `images.unsplash.com`
+- Photo uploads use `URL.createObjectURL()` for preview; wire to Supabase Storage `profile-photos` bucket when connecting backend
+- Razorpay: placeholder `alert()` in `/subscription` — replace with Razorpay SDK order creation
+- Clerk webhook secret must be set as `CLERK_WEBHOOK_SECRET` in env and registered in Clerk dashboard
+
+## Project Structure
+```
+src/
+├── app/
+│   ├── page.tsx              # Landing
+│   ├── layout.tsx            # ClerkProvider wrapper
+│   ├── not-found.tsx         # 404
+│   ├── error.tsx             # Error boundary
+│   ├── loading.tsx           # Global loader
+│   ├── login/
+│   ├── register/
+│   ├── dashboard/
+│   ├── onboarding/
+│   ├── search/
+│   ├── profile/[id]/
+│   ├── profile/edit/
+│   ├── interests/
+│   ├── chat/
+│   ├── chat/[id]/
+│   ├── contacts/
+│   ├── notifications/
+│   ├── subscription/
+│   ├── settings/
+│   ├── history/
+│   ├── stories/
+│   ├── admin/
+│   └── api/webhooks/clerk/   # route.ts
+├── components/ui/            # Shadcn components
+├── lib/
+│   ├── supabase.ts
+│   └── utils.ts
+└── proxy.ts                  # Clerk middleware
+supabase/
+└── schema.sql
+```
