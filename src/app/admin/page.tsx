@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import {
-  ArrowLeft,
   Search,
   CheckCircle,
   XCircle,
@@ -25,6 +24,7 @@ import {
   BookHeart,
   Eye,
 } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const PROFILES = [
   { id: "1", name: "Ananya Reddy", email: "ananya@email.com", location: "Hyderabad", joined: "Apr 10", verified: false, premium: true, photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=60" },
@@ -92,15 +92,7 @@ export default function AdminPage() {
         <div className="absolute inset-0 bg-pink-950/60" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-white font-semibold">Admin Panel</span>
-          </div>
-          <Badge className="text-xs font-bold" style={{ background: "#E91E8C", color: "#fff" }}>Admin</Badge>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
 

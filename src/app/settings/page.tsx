@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -13,7 +12,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArrowLeft, Shield, Bell, Lock, Trash2, Eye, EyeOff, Wifi, KeyRound } from "lucide-react";
+import { Shield, Bell, Lock, Trash2, Eye, EyeOff, Wifi, KeyRound } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 export default function SettingsPage() {
   const [hideProfile, setHideProfile] = useState(false);
@@ -34,12 +34,7 @@ export default function SettingsPage() {
           <div className="absolute inset-0 bg-pink-950/40" />
         </div>
 
-        <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-          <div className="max-w-2xl mx-auto px-4 flex items-center h-14 gap-3">
-            <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-white font-semibold">Settings</span>
-          </div>
-        </nav>
+        <Navbar />
 
         <div className="max-w-2xl mx-auto px-4 py-8 w-full space-y-6">
 

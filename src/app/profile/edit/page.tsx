@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -15,7 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Camera, Save, X } from "lucide-react";
+import { Camera, Save, X } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const RELIGIONS = ["Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Other"];
 const EDUCATIONS = ["10th", "12th", "Diploma", "B.A.", "B.Com", "B.Sc.", "B.Tech", "M.A.", "M.Tech", "MBA", "PhD", "Other"];
@@ -45,30 +45,7 @@ export default function EditProfilePage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white/70 hover:text-white transition">
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <span className="text-white font-semibold">Edit Profile</span>
-          </div>
-
-          {/* Completion Widget */}
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-xs text-white/50">Profile Completion</span>
-              <span className="text-sm font-bold" style={{ color: "#F8A4C8" }}>
-                {completionScore}%
-              </span>
-            </div>
-            <div className="w-24 hidden sm:block">
-              <Progress value={completionScore} className="h-2 bg-white/20" />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-8 w-full">
         {/* Mobile Completion */}

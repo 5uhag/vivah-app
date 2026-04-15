@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, Heart, Hand, MessageCircle, Settings, Bell } from "lucide-react";
+import { Heart, Hand, MessageCircle, Settings, Bell } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 type NotifType = "match" | "interest" | "message" | "system";
 
@@ -63,11 +63,12 @@ export default function NotificationsPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-2xl mx-auto px-4 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-white font-semibold">Notifications</span>
+      <Navbar />
+
+      <div className="max-w-2xl mx-auto px-4 py-6 w-full">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h1 className="text-white font-bold text-xl">Notifications</h1>
             {unreadCount > 0 && (
               <span className="px-1.5 py-0.5 rounded-full text-xs font-bold text-white" style={{ background: "#E91E8C" }}>{unreadCount}</span>
             )}
@@ -78,9 +79,6 @@ export default function NotificationsPage() {
             </button>
           )}
         </div>
-      </nav>
-
-      <div className="max-w-2xl mx-auto px-4 py-6 w-full">
         {notifs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-28 text-white/40">
             <Bell className="w-14 h-14 mb-4" />

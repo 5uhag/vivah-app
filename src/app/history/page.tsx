@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, MapPin, Heart, Bookmark, PartyPopper } from "lucide-react";
+import { MapPin, Heart, Bookmark, PartyPopper } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const MATCHES = [
   { id: "1", name: "Meera Pillai", age: 29, location: "Kochi", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=60", date: "April 10, 2026", status: "Chatting" },
@@ -36,12 +37,7 @@ export default function HistoryPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 flex items-center h-14 gap-3">
-          <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <span className="text-white font-semibold">History</span>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-8 w-full">
         {/* Stat */}

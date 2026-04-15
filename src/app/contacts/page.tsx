@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Coins, Eye, Lock, MapPin, Clock } from "lucide-react";
+import { Coins, Eye, Lock, MapPin, Clock } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const CONTACTS = [
   { id: "1", name: "Ananya Reddy", age: 26, location: "Hyderabad", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=60", phone: "+91 98765 43210", email: "ananya.r@email.com", unlocked: false },
@@ -37,21 +38,17 @@ export default function ContactsPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-white font-semibold">Contacts</span>
-          </div>
+      <Navbar />
+
+      <div className="max-w-4xl mx-auto px-4 py-8 w-full space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-white font-bold text-xl">Contacts</h1>
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 border border-white/20">
             <Coins className="w-4 h-4" style={{ color: "#F8A4C8" }} />
             <span className="text-white font-semibold text-sm">{credits} Credits</span>
           </div>
         </div>
-      </nav>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 w-full space-y-8">
-        {/* Contact Cards */}
         <section>
           <h2 className="text-white font-semibold text-lg mb-4">Contact Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -66,7 +63,6 @@ export default function ContactsPage() {
                     <div className="flex items-center gap-1 text-white/60 text-xs"><MapPin className="w-3 h-3" />{c.location}</div>
                   </div>
                 </div>
-
                 {c.unlocked ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2">
@@ -83,24 +79,14 @@ export default function ContactsPage() {
                   <div className="space-y-2">
                     <div className="bg-white/10 rounded-xl px-3 py-2 relative overflow-hidden">
                       <div className="blur-sm select-none text-white text-sm">+91 XXXXX XXXXX</div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Lock className="w-4 h-4 text-white/60" />
-                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center"><Lock className="w-4 h-4 text-white/60" /></div>
                     </div>
                     <div className="bg-white/10 rounded-xl px-3 py-2 relative overflow-hidden">
                       <div className="blur-sm select-none text-white text-sm">xxxxx@email.com</div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Lock className="w-4 h-4 text-white/60" />
-                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center"><Lock className="w-4 h-4 text-white/60" /></div>
                     </div>
-                    <button
-                      onClick={() => handleUnlock(c.id)}
-                      disabled={credits < 1}
-                      className="w-full mt-1 flex items-center justify-center gap-2 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90 disabled:opacity-40"
-                      style={{ background: "#E91E8C" }}
-                    >
-                      <Coins className="w-3.5 h-3.5" />
-                      Unlock for 1 Credit
+                    <button onClick={() => handleUnlock(c.id)} disabled={credits < 1} className="w-full mt-1 flex items-center justify-center gap-2 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90 disabled:opacity-40" style={{ background: "#E91E8C" }}>
+                      <Coins className="w-3.5 h-3.5" /> Unlock for 1 Credit
                     </button>
                   </div>
                 )}
@@ -110,7 +96,7 @@ export default function ContactsPage() {
           {credits === 0 && (
             <div className="mt-4 rounded-xl border border-white/10 bg-white/10 p-4 text-center">
               <p className="text-white/60 text-sm mb-3">You&apos;re out of credits. Buy more to unlock contacts.</p>
-              <Link href="/premium" className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: "#E91E8C" }}>
+              <Link href="/subscription" className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: "#E91E8C" }}>
                 <Coins className="w-4 h-4" /> Buy Credits
               </Link>
             </div>
@@ -119,11 +105,9 @@ export default function ContactsPage() {
 
         <Separator className="bg-white/10" />
 
-        {/* Profile Viewers */}
         <section>
           <h2 className="text-white font-semibold text-lg mb-4 flex items-center gap-2">
-            <Eye className="w-5 h-5" style={{ color: "#F8A4C8" }} />
-            Who Viewed My Profile
+            <Eye className="w-5 h-5" style={{ color: "#F8A4C8" }} /> Who Viewed My Profile
           </h2>
           <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md divide-y divide-white/10 overflow-hidden">
             {VIEWERS.map((v) => (

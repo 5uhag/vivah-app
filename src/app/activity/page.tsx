@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, Eye, Heart, MessageCircle, UserCheck, Clock } from "lucide-react";
+import { Eye, Heart, MessageCircle, UserCheck, Clock } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const ACTIVITY = [
   { id: "1", type: "view", text: "Rohan Mehta viewed your profile", time: "5 min ago", icon: Eye, color: "#F8A4C8" },
@@ -23,14 +23,10 @@ export default function ActivityPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-2xl mx-auto px-4 flex items-center h-14 gap-3">
-          <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <span className="text-white font-semibold">Activity</span>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-2xl mx-auto px-4 py-8 w-full">
+        <h1 className="text-white font-bold text-xl mb-5">Activity</h1>
         <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md divide-y divide-white/10 overflow-hidden">
           {ACTIVITY.map((a) => (
             <div key={a.id} className="flex items-center gap-4 px-4 py-4">

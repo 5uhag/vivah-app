@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Shield, AlertTriangle, Eye, Phone, Lock, Flag } from "lucide-react";
-import { useUser, SignOutButton } from "@clerk/nextjs";
+import { Shield, AlertTriangle, Eye, Phone, Lock, Flag } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const TIPS = [
   { icon: Eye, title: "Verify Before You Trust", tip: "Always verify a person's identity before sharing personal contact information. Look for the verified badge on profiles — it means our team has confirmed their identity document." },
@@ -22,7 +22,6 @@ const TRUST_BADGES = [
 ];
 
 export default function SafetyPage() {
-  const { isSignedIn } = useUser();
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -37,28 +36,7 @@ export default function SafetyPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-            <span className="text-white font-semibold">Safety Tips</span>
-          </div>
-          <div className="flex gap-3 items-center">
-            {isSignedIn ? (
-              <>
-                <Link href="/search" className="px-4 py-1.5 text-sm text-white border border-white/30 rounded-full hover:bg-white/10 transition">Search 💕</Link>
-                <Link href="/profile/edit" className="px-4 py-1.5 text-sm text-white border border-white/30 rounded-full hover:bg-white/10 transition">My Profile</Link>
-                <SignOutButton><button className="px-4 py-1.5 text-sm text-white rounded-full hover:opacity-90 transition" style={{ background: "#E91E8C" }}>Sign Out</button></SignOutButton>
-              </>
-            ) : (
-              <>
-                <Link href="/register" className="px-4 py-1.5 text-sm text-white border border-white/30 rounded-full hover:bg-white/10 transition">Create Free Profile</Link>
-                <Link href="/login" className="px-4 py-1.5 text-sm text-white rounded-full hover:opacity-90 transition" style={{ background: "#E91E8C" }}>Sign In</Link>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-12 w-full space-y-10">
         <div className="text-center max-w-2xl mx-auto">

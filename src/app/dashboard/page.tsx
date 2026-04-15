@@ -4,16 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import {
-  Heart,
-  MessageCircle,
-  Eye,
-  Bell,
-  Search,
-  MapPin,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
+import { Heart, MessageCircle, Eye, Bell, Search, MapPin, Sparkles, TrendingUp } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const STATS = [
   { label: "Profile Views", value: "128", change: "+12 today", icon: Eye, color: "#E91E8C" },
@@ -35,7 +27,6 @@ const ONLINE_USERS = [
   { id: "1", name: "Ananya", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=60" },
   { id: "2", name: "Meera", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=60" },
   { id: "4", name: "Pooja", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=60" },
-  { id: "7", name: "Kavya", photo: "https://images.unsplash.com/photo-1529626798458-92182e662485?auto=format&fit=crop&w=100&q=60" },
   { id: "8", name: "Sana", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=60" },
 ];
 
@@ -50,42 +41,18 @@ export default function DashboardPage() {
   return (
     <div className="relative min-h-screen flex flex-col">
       <div className="fixed inset-0 -z-10">
-        <Image
-          src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1920&q=60"
-          alt="Dashboard background"
-          fill
-          className="object-cover"
-          priority
-        />
+        <Image src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1920&q=60" alt="Dashboard background" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-pink-950/50" />
       </div>
 
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
-          <Link href="/" className="text-xl font-bold text-white">PyaarMatch 💕</Link>
-          <div className="flex items-center gap-2">
-            {QUICK_LINKS.map((q) => (
-              <Link key={q.href} href={q.href} className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white/70 text-xs hover:bg-white/10 hover:text-white transition">
-                <q.icon className="w-3.5 h-3.5" />{q.label}
-              </Link>
-            ))}
-            <Link href="/profile/edit" className="ml-2 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white text-xs font-medium transition hover:opacity-90" style={{ background: "#E91E8C" }}>
-              My Profile
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
-
-        {/* Welcome */}
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">Welcome back, Priya 👋</h1>
           <p className="text-white/60 text-sm">You have 3 new interests and 2 unread messages today.</p>
         </div>
 
-        {/* Profile completion nudge */}
         <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
@@ -100,7 +67,6 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {STATS.map((s) => (
             <div key={s.label} className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-4">
@@ -116,7 +82,6 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Online Now */}
         <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-5">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
@@ -137,7 +102,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* AI Matches */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -166,24 +130,14 @@ export default function DashboardPage() {
                     </div>
                     <div className="absolute bottom-2 left-3 right-3">
                       <div className="text-white font-semibold">{m.name}, {m.age}</div>
-                      <div className="flex items-center gap-1 text-white/70 text-xs">
-                        <MapPin className="w-3 h-3" />{m.location} · {m.profession}
-                      </div>
+                      <div className="flex items-center gap-1 text-white/70 text-xs"><MapPin className="w-3 h-3" />{m.location} · {m.profession}</div>
                     </div>
                   </div>
                   <div className="px-4 py-3 flex gap-2">
-                    <button
-                      onClick={(e) => e.preventDefault()}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-full text-white text-xs font-medium transition hover:opacity-90"
-                      style={{ background: "#E91E8C" }}
-                    >
+                    <button onClick={(e) => e.preventDefault()} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-full text-white text-xs font-medium transition hover:opacity-90" style={{ background: "#E91E8C" }}>
                       <Heart className="w-3.5 h-3.5" /> Interest
                     </button>
-                    <Link
-                      href={`/chat/${m.id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-full border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition"
-                    >
+                    <Link href={`/chat/${m.id}`} onClick={(e) => e.stopPropagation()} className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-full border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition">
                       <MessageCircle className="w-3.5 h-3.5" /> Chat
                     </Link>
                   </div>
@@ -193,7 +147,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Bottom Quick Actions (mobile) */}
         <div className="sm:hidden grid grid-cols-2 gap-3 pb-4">
           {QUICK_LINKS.map((q) => (
             <Link key={q.href} href={q.href} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md text-white text-sm font-medium hover:bg-white/30 transition">
@@ -201,7 +154,6 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
-
       </div>
     </div>
   );

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Heart, X, Clock, ArrowLeft } from "lucide-react";
+import { MapPin, Heart, X, Clock } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 const RECEIVED = [
   { id: "1", name: "Rohan Mehta", age: 30, location: "Mumbai", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=60", icebreaker: "I love hiking and would love to explore trails with you!", expiresIn: 5 },
@@ -54,12 +55,7 @@ export default function InterestsPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 flex items-center h-14 gap-3">
-          <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <span className="text-white font-semibold">My Interests</span>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-8 w-full">
         <Tabs defaultValue="received">
@@ -71,11 +67,8 @@ export default function InterestsPage() {
             <TabsTrigger value="accepted" className="text-white data-[state=active]:text-white data-[state=active]:bg-[#E91E8C]">Accepted</TabsTrigger>
           </TabsList>
 
-          {/* Received */}
           <TabsContent value="received">
-            {received.length === 0 ? (
-              <EmptyState label="No pending interests" />
-            ) : (
+            {received.length === 0 ? <EmptyState label="No pending interests" /> : (
               <div className="space-y-4">
                 {received.map((r) => (
                   <div key={r.id} className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-4 flex flex-col sm:flex-row gap-4 items-start">
@@ -104,11 +97,8 @@ export default function InterestsPage() {
             )}
           </TabsContent>
 
-          {/* Sent */}
           <TabsContent value="sent">
-            {SENT.length === 0 ? (
-              <EmptyState label="You haven't sent any interests yet" />
-            ) : (
+            {SENT.length === 0 ? <EmptyState label="You haven't sent any interests yet" /> : (
               <div className="space-y-4">
                 {SENT.map((s) => (
                   <div key={s.id} className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-4 flex flex-col sm:flex-row gap-4 items-start">
@@ -134,11 +124,8 @@ export default function InterestsPage() {
             )}
           </TabsContent>
 
-          {/* Accepted */}
           <TabsContent value="accepted">
-            {ACCEPTED.length === 0 ? (
-              <EmptyState label="No accepted interests yet" />
-            ) : (
+            {ACCEPTED.length === 0 ? <EmptyState label="No accepted interests yet" /> : (
               <div className="space-y-4">
                 {ACCEPTED.map((a) => (
                   <div key={a.id} className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-4 flex flex-col sm:flex-row gap-4 items-start">

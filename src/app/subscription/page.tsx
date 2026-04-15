@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, Check, Zap, Crown, Star } from "lucide-react";
+import { Check, Zap, Crown, Star } from "lucide-react";
+import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 
 const CURRENT_PLAN = "free";
@@ -78,12 +78,7 @@ export default function SubscriptionPage() {
         <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
-      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-5xl mx-auto px-4 flex items-center h-14 gap-3">
-          <Link href="/" className="text-white/70 hover:text-white transition"><ArrowLeft className="w-5 h-5" /></Link>
-          <span className="text-white font-semibold">Choose Your Plan</span>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 py-12 w-full">
         <div className="text-center mb-12">
