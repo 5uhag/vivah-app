@@ -1,14 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useUser, SignOutButton } from "@clerk/nextjs";
 import {
   Heart,
   Shield,
-  Users,
-  Star,
   MessageCircle,
   Search,
   CheckCircle,
   Globe,
+  Star,
 } from "lucide-react";
 
 const features = [
@@ -21,30 +23,16 @@ const features = [
 ];
 
 const stories = [
-  {
-    names: "Priya & Arjun",
-    location: "Mumbai",
-    quote: "We connected on PyaarMatch 💕 and knew instantly. Two years later, we are happily married!",
-    year: "2023",
-  },
-  {
-    names: "Kavita & Rahul",
-    location: "Delhi",
-    quote: "PyaarMatch 💕's smart matching brought us together. Our families couldn't be happier.",
-    year: "2024",
-  },
-  {
-    names: "Meera & Vikram",
-    location: "Bangalore",
-    quote: "From the first message to the mandap - PyaarMatch 💕 made every step beautiful.",
-    year: "2024",
-  },
+  { names: "Priya & Arjun", location: "Mumbai", quote: "We connected on PyaarMatch 💕 and knew instantly. Two years later, we are happily married!", year: "2023" },
+  { names: "Kavita & Rahul", location: "Delhi", quote: "PyaarMatch 💕's smart matching brought us together. Our families couldn't be happier.", year: "2024" },
+  { names: "Meera & Vikram", location: "Bangalore", quote: "From the first message to the mandap - PyaarMatch 💕 made every step beautiful.", year: "2024" },
 ];
 
 export default function LandingPage() {
+  const { isSignedIn } = useUser();
+
   return (
     <div className="relative min-h-screen flex flex-col">
-      {/* Background */}
       <div className="fixed inset-0 -z-10">
         <Image
           src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1920&q=60"
@@ -60,21 +48,44 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <span className="text-2xl font-bold text-white">PyaarMatch 💕</span>
-          <div className="flex gap-3">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium text-white rounded-full transition hover:opacity-90"
-              style={{ background: "#E91E8C" }}
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="px-4 py-2 text-sm font-medium text-white rounded-full transition"
-              style={{ background: "#E91E8C" }}
-            >
-              Register
-            </Link>
+          <div className="flex gap-3 items-center">
+            {isSignedIn ? (
+              <>
+                <Link
+                  href="/search"
+                  className="px-4 py-2 text-sm font-medium text-white border border-white/30 rounded-full hover:bg-white/10 transition"
+                >
+                  Search 💕
+                </Link>
+                <Link
+                  href="/profile/edit"
+                  className="px-4 py-2 text-sm font-medium text-white border border-white/30 rounded-full hover:bg-white/10 transition"
+                >
+                  My Profile
+                </Link>
+                <SignOutButton>
+                  <button className="px-4 py-2 text-sm font-medium text-white rounded-full transition hover:opacity-90" style={{ background: "#E91E8C" }}>
+                    Sign Out
+                  </button>
+                </SignOutButton>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-medium text-white border border-white/30 rounded-full hover:bg-white/10 transition"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-2 text-sm font-medium text-white rounded-full transition hover:opacity-90"
+                  style={{ background: "#E91E8C" }}
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </nav>
@@ -98,8 +109,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/login"
-            className="px-8 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition hover:opacity-90"
-            style={{ background: "#E91E8C" }}
+            className="px-8 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition hover:opacity-90 border border-white/30 hover:bg-white/10"
           >
             Sign In
           </Link>
@@ -112,12 +122,10 @@ export default function LandingPage() {
           {[
             { value: "50,000+", label: "Profiles" },
             { value: "10,000+", label: "Marriages" },
-            { value: "4.8*", label: "Rating" },
+            { value: "4.8★", label: "Rating" },
           ].map((s) => (
             <div key={s.label}>
-              <div className="text-3xl sm:text-4xl font-extrabold" style={{ color: "#F8A4C8" }}>
-                {s.value}
-              </div>
+              <div className="text-3xl sm:text-4xl font-extrabold" style={{ color: "#F8A4C8" }}>{s.value}</div>
               <div className="mt-1 text-sm sm:text-base text-white/70">{s.label}</div>
             </div>
           ))}
@@ -132,14 +140,8 @@ export default function LandingPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (
-              <div
-                key={f.title}
-                className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md hover:bg-white/30 transition"
-              >
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
-                  style={{ background: "#E91E8C22" }}
-                >
+              <div key={f.title} className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md hover:bg-white/30 transition">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ background: "#E91E8C22" }}>
                   <f.icon className="w-6 h-6" style={{ color: "#F8A4C8" }} />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{f.title}</h3>
@@ -159,20 +161,14 @@ export default function LandingPage() {
           <p className="text-white/60 text-center mb-12">Real couples, real love stories</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {stories.map((s) => (
-              <div
-                key={s.names}
-                className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md"
-              >
+              <div key={s.names} className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md">
                 <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm"
-                    style={{ background: "#E91E8C" }}
-                  >
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ background: "#E91E8C" }}>
                     {s.names[0]}
                   </div>
                   <div>
                     <div className="font-semibold text-white">{s.names}</div>
-                    <div className="text-xs text-white/50">{s.location} - {s.year}</div>
+                    <div className="text-xs text-white/50">{s.location} · {s.year}</div>
                   </div>
                 </div>
                 <p className="text-white/70 text-sm italic">&ldquo;{s.quote}&rdquo;</p>
@@ -185,11 +181,7 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="text-center mt-10">
-            <Link
-              href="/stories"
-              className="px-6 py-3 rounded-full text-white transition hover:opacity-90"
-              style={{ background: "#E91E8C" }}
-            >
+            <Link href="/stories" className="px-6 py-3 rounded-full border border-white/30 text-white hover:bg-white/10 transition">
               View All Stories
             </Link>
           </div>
@@ -197,7 +189,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-pink-950/40 border-t border-white/10 py-10 px-4">
+      <footer className="bg-black/60 border-t border-white/10 py-10 px-4">
         <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-sm text-white/50">
           <div>
             <div className="text-white font-bold text-lg mb-3">PyaarMatch 💕</div>
@@ -229,10 +221,9 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-white/10 text-center text-xs text-white/30">
-          (c) {new Date().getFullYear()} PyaarMatch 💕. All rights reserved. Made with love in India.
+          © {new Date().getFullYear()} PyaarMatch. All rights reserved. Made with 💕 in India.
         </div>
       </footer>
     </div>
   );
 }
-
