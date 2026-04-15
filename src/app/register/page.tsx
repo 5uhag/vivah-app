@@ -26,23 +26,10 @@ export default function RegisterPage() {
       <SignUp
         appearance={{
           elements: {
-            rootBox: "w-full max-w-md",
-            card: "rounded-2xl shadow-2xl border border-white/10 bg-white/20 backdrop-blur-md",
-            headerTitle: "text-white",
-            headerSubtitle: "text-white/60",
-            socialButtonsBlockButton: "border border-white/20 text-white hover:bg-white/20",
-            dividerLine: "bg-white/20",
-            dividerText: "text-white/40",
-            formFieldLabel: "text-white/80",
-            formFieldInput: "bg-white/20 border border-white/20 text-white placeholder:text-white/40 focus:border-[#F8A4C8]",
-            formButtonPrimary: "bg-[#E91E8C] hover:bg-[#d81b7f] text-white rounded-full",
-            footerActionLink: "text-[#F8A4C8] hover:text-[#fbc0dc]",
-            identityPreviewText: "text-white",
-            identityPreviewEditButton: "text-[#F8A4C8]",
+            formButtonPrimary: "bg-pink-500",
           },
         }}
       />
     </div>
   );
 }
-
