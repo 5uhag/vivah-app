@@ -24,6 +24,7 @@ export default function LoginPage() {
 
       {/* Clerk SignIn */}
       <SignIn
+        routing="hash"
         appearance={{
           elements: {
             formButtonPrimary: "bg-pink-500",

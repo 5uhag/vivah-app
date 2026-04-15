@@ -24,6 +24,7 @@ export default function RegisterPage() {
 
       {/* Clerk SignUp */}
       <SignUp
+        routing="hash"
         appearance={{
           elements: {
             formButtonPrimary: "bg-pink-500",

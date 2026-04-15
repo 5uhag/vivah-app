@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import {
   Heart,
@@ -11,15 +12,59 @@ import {
   CheckCircle,
   Globe,
   Star,
+  X,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-const features = [
-  { icon: Shield, title: "100% Verified Profiles", desc: "Every profile is manually verified by our team for authenticity." },
-  { icon: Search, title: "Smart Matchmaking", desc: "AI-powered matches based on your preferences, values, and lifestyle." },
-  { icon: MessageCircle, title: "Safe Messaging", desc: "Chat securely with matches. Your privacy is our priority." },
-  { icon: Heart, title: "Icebreaker Messages", desc: "Break the ice with thoughtful prompts and interest expressions." },
-  { icon: Globe, title: "Multi-language Support", desc: "Available in English and Hindi for a truly Indian experience." },
-  { icon: CheckCircle, title: "Premium Plans", desc: "Unlock unlimited interests, contact views, and priority listing." },
+type Feature = {
+  icon: React.ElementType;
+  title: string;
+  desc: string;
+  modalBody: string;
+};
+
+const features: Feature[] = [
+  {
+    icon: Shield,
+    title: "100% Verified Profiles",
+    desc: "Every profile is manually verified by our team for authenticity.",
+    modalBody: "Every profile goes through manual verification. We check photos, identity and details before approval.",
+  },
+  {
+    icon: Search,
+    title: "Smart Matchmaking",
+    desc: "AI-powered matches based on your preferences, values, and lifestyle.",
+    modalBody: "Our AI analyzes age, location, religion, profession and interests to suggest your most compatible matches daily.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Safe Messaging",
+    desc: "Chat securely with matches. Your privacy is our priority.",
+    modalBody: "Chat only with people who match you. Block, report and privacy controls built in.",
+  },
+  {
+    icon: Heart,
+    title: "Icebreaker Messages",
+    desc: "Break the ice with thoughtful prompts and interest expressions.",
+    modalBody: "Not sure what to say first? Use our curated icebreaker prompts to start conversations naturally.",
+  },
+  {
+    icon: Globe,
+    title: "Multi-language Support",
+    desc: "Available in English and Hindi for a truly Indian experience.",
+    modalBody: "Use PyaarMatch in English, Hindi or Kannada. More languages coming soon.",
+  },
+  {
+    icon: CheckCircle,
+    title: "Premium Plans",
+    desc: "Unlock unlimited interests, contact views, and priority listing.",
+    modalBody: "Unlock unlimited interests, see who viewed you, priority listing and contact reveals with Premium.",
+  },
 ];
 
 const stories = [
@@ -30,6 +75,7 @@ const stories = [
 
 export default function LandingPage() {
   const { isSignedIn } = useUser();
+  const [activeFeature, setActiveFeature] = useState<Feature | null>(null);
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -64,7 +110,10 @@ export default function LandingPage() {
                   My Profile
                 </Link>
                 <SignOutButton>
-                  <button className="px-4 py-2 text-sm font-medium text-white rounded-full transition hover:opacity-90" style={{ background: "#E91E8C" }}>
+                  <button
+                    className="px-4 py-2 text-sm font-medium text-white rounded-full transition hover:opacity-90"
+                    style={{ background: "#E91E8C" }}
+                  >
                     Sign Out
                   </button>
                 </SignOutButton>
@@ -72,17 +121,17 @@ export default function LandingPage() {
             ) : (
               <>
                 <Link
-                  href="/login"
+                  href="/register"
                   className="px-4 py-2 text-sm font-medium text-white border border-white/30 rounded-full hover:bg-white/10 transition"
                 >
-                  Login
+                  Create Free Profile
                 </Link>
                 <Link
-                  href="/register"
+                  href="/login"
                   className="px-4 py-2 text-sm font-medium text-white rounded-full transition hover:opacity-90"
                   style={{ background: "#E91E8C" }}
                 >
-                  Register
+                  Sign In
                 </Link>
               </>
             )}
@@ -140,17 +189,63 @@ export default function LandingPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (
-              <div key={f.title} className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md hover:bg-white/30 transition">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ background: "#E91E8C22" }}>
+              <button
+                key={f.title}
+                onClick={() => setActiveFeature(f)}
+                className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md hover:bg-white/30 transition text-left cursor-pointer group"
+              >
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+                  style={{ background: "#E91E8C22" }}
+                >
                   <f.icon className="w-6 h-6" style={{ color: "#F8A4C8" }} />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{f.title}</h3>
                 <p className="text-white/60 text-sm">{f.desc}</p>
-              </div>
+                <span className="mt-3 inline-block text-xs font-medium" style={{ color: "#F8A4C8" }}>
+                  Learn more →
+                </span>
+              </button>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Feature Modal */}
+      <Dialog open={!!activeFeature} onOpenChange={(open) => { if (!open) setActiveFeature(null); }}>
+        <DialogContent className="border border-white/10 bg-pink-950/95 backdrop-blur-md text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white text-lg flex items-center gap-3">
+              {activeFeature && (
+                <span
+                  className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                  style={{ background: "#E91E8C22" }}
+                >
+                  <activeFeature.icon className="w-5 h-5" style={{ color: "#F8A4C8" }} />
+                </span>
+              )}
+              {activeFeature?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-white/70 text-sm leading-relaxed mt-1">{activeFeature?.modalBody}</p>
+          <div className="flex gap-3 mt-4">
+            <Link
+              href="/register"
+              className="flex-1 text-center py-2.5 rounded-full text-white text-sm font-semibold transition hover:opacity-90"
+              style={{ background: "#E91E8C" }}
+              onClick={() => setActiveFeature(null)}
+            >
+              Get Started
+            </Link>
+            <button
+              onClick={() => setActiveFeature(null)}
+              className="px-4 py-2.5 rounded-full border border-white/20 text-white text-sm hover:bg-white/10 transition flex items-center gap-1.5"
+            >
+              <X className="w-4 h-4" /> Close
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Success Stories */}
       <section className="py-20 px-4 bg-pink-950/40">
@@ -163,7 +258,10 @@ export default function LandingPage() {
             {stories.map((s) => (
               <div key={s.names} className="rounded-2xl p-6 border border-white/10 bg-white/20 backdrop-blur-md">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ background: "#E91E8C" }}>
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm"
+                    style={{ background: "#E91E8C" }}
+                  >
                     {s.names[0]}
                   </div>
                   <div>
@@ -181,7 +279,10 @@ export default function LandingPage() {
             ))}
           </div>
           <div className="text-center mt-10">
-            <Link href="/stories" className="px-6 py-3 rounded-full border border-white/30 text-white hover:bg-white/10 transition">
+            <Link
+              href="/stories"
+              className="px-6 py-3 rounded-full border border-white/30 text-white hover:bg-white/10 transition"
+            >
               View All Stories
             </Link>
           </div>
@@ -198,25 +299,25 @@ export default function LandingPage() {
           <div>
             <div className="text-white font-semibold mb-3">Company</div>
             <ul className="space-y-2">
-              <li><Link href="#" className="hover:text-white transition">About Us</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Careers</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Press</Link></li>
+              <li><Link href="/about" className="hover:text-white transition">About Us</Link></li>
+              <li><Link href="/careers" className="hover:text-white transition">Careers</Link></li>
+              <li><Link href="/press" className="hover:text-white transition">Press</Link></li>
             </ul>
           </div>
           <div>
             <div className="text-white font-semibold mb-3">Support</div>
             <ul className="space-y-2">
-              <li><Link href="#" className="hover:text-white transition">Help Center</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Safety Tips</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Contact Us</Link></li>
+              <li><Link href="/help" className="hover:text-white transition">Help Center</Link></li>
+              <li><Link href="/safety" className="hover:text-white transition">Safety Tips</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition">Contact Us</Link></li>
             </ul>
           </div>
           <div>
             <div className="text-white font-semibold mb-3">Legal</div>
             <ul className="space-y-2">
-              <li><Link href="#" className="hover:text-white transition">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Terms of Service</Link></li>
-              <li><Link href="#" className="hover:text-white transition">Cookie Policy</Link></li>
+              <li><Link href="/privacy" className="hover:text-white transition">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition">Terms of Service</Link></li>
+              <li><Link href="/cookies" className="hover:text-white transition">Cookie Policy</Link></li>
             </ul>
           </div>
         </div>

@@ -28,10 +28,11 @@ const PROFILES = [
   { id: "3", name: "Riya Kapoor", age: 25, location: "Delhi", religion: "Hindu", profession: "Designer", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=60", compat: 91, ai: true },
   { id: "4", name: "Sneha Iyer", age: 29, location: "Chennai", religion: "Hindu", profession: "Engineer", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=60", compat: 88, ai: false },
   { id: "5", name: "Divya Menon", age: 27, location: "Bangalore", religion: "Hindu", profession: "Lawyer", photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=60", compat: 85, ai: false },
-  { id: "6", name: "Kavya Joshi", age: 24, location: "Pune", religion: "Hindu", profession: "MBA", photo: "https://images.unsplash.com/photo-1529626798458-92182e662485?auto=format&fit=crop&w=400&q=60", compat: 82, ai: false },
+  { id: "6", name: "Kavya Joshi", age: 24, location: "Pune", religion: "Hindu", profession: "MBA", photo: "https://images.unsplash.com/photo-1524504388940-b1c1722653e8?auto=format&fit=crop&w=400&q=60", compat: 82, ai: false },
   { id: "7", name: "Meera Pillai", age: 30, location: "Mumbai", religion: "Hindu", profession: "CA", photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=400&q=60", compat: 79, ai: false },
   { id: "8", name: "Sana Sheikh", age: 26, location: "Lucknow", religion: "Muslim", profession: "Professor", photo: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=400&q=60", compat: 76, ai: false },
   { id: "9", name: "Preethi Kumar", age: 27, location: "Coimbatore", religion: "Hindu", profession: "Nurse", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=60", compat: 73, ai: false },
+  { id: "10", name: "Nisha Verma", age: 28, location: "Jaipur", religion: "Hindu", profession: "Business", photo: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=400&q=60", compat: 70, ai: false },
 ];
 
 const RELIGIONS = ["All", "Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain"];
