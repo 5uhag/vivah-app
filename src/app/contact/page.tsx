@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, Mail, MapPin, Phone, Send, Instagram, Twitter, Linkedin, Facebook } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Phone, Send, Camera, MessageCircle, Briefcase, Globe } from "lucide-react";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 
 export default function ContactPage() {
@@ -172,10 +172,10 @@ export default function ContactPage() {
               <h2 className="text-white font-bold mb-4">Follow Us</h2>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { icon: Instagram, label: "Instagram", handle: "@pyaarmatch" },
-                  { icon: Twitter, label: "Twitter / X", handle: "@pyaarmatch" },
-                  { icon: Linkedin, label: "LinkedIn", handle: "PyaarMatch" },
-                  { icon: Facebook, label: "Facebook", handle: "PyaarMatch" },
+                  { icon: Camera, label: "Instagram", handle: "@pyaarmatch" },
+                  { icon: MessageCircle, label: "Twitter / X", handle: "@pyaarmatch" },
+                  { icon: Briefcase, label: "LinkedIn", handle: "PyaarMatch" },
+                  { icon: Globe, label: "Facebook", handle: "PyaarMatch" },
                 ].map((s) => (
                   <div key={s.label} className="flex items-center gap-2 text-white/60 text-xs">
                     <s.icon className="w-4 h-4 shrink-0" style={{ color: "#F8A4C8" }} />
