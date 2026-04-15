@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vivah — Find Your Perfect Life Partner",
+  title: "PyaarMatch 💕 - Find Your Perfect Match with Pyaar",
   description: "India's most trusted matrimonial platform. Connect with verified profiles and find your soulmate.",
 };
 
@@ -34,3 +34,4 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
+

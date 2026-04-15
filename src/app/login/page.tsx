@@ -14,12 +14,12 @@ export default function LoginPage() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
       {/* Logo */}
       <Link href="/" className="mb-8 text-3xl font-extrabold text-white">
-        Vivah ❤️
+        PyaarMatch 💕
       </Link>
 
       {/* Clerk SignIn */}
@@ -27,21 +27,22 @@ export default function LoginPage() {
         appearance={{
           elements: {
             rootBox: "w-full max-w-md",
-            card: "rounded-2xl shadow-2xl border border-white/10 bg-white/10 backdrop-blur-md",
+            card: "rounded-2xl shadow-2xl border border-white/10 bg-white/20 backdrop-blur-md",
             headerTitle: "text-white",
             headerSubtitle: "text-white/60",
-            socialButtonsBlockButton: "border border-white/20 text-white hover:bg-white/10",
+            socialButtonsBlockButton: "border border-white/20 text-white hover:bg-white/20",
             dividerLine: "bg-white/20",
             dividerText: "text-white/40",
             formFieldLabel: "text-white/80",
-            formFieldInput: "bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:border-[#F39C12]",
-            formButtonPrimary: "bg-[#C0392B] hover:bg-[#a93226] text-white",
-            footerActionLink: "text-[#F39C12] hover:text-[#e67e22]",
+            formFieldInput: "bg-white/20 border border-white/20 text-white placeholder:text-white/40 focus:border-[#F8A4C8]",
+            formButtonPrimary: "bg-[#E91E8C] hover:bg-[#d81b7f] text-white rounded-full",
+            footerActionLink: "text-[#F8A4C8] hover:text-[#fbc0dc]",
             identityPreviewText: "text-white",
-            identityPreviewEditButton: "text-[#F39C12]",
+            identityPreviewEditButton: "text-[#F8A4C8]",
           },
         }}
       />
     </div>
   );
 }
+

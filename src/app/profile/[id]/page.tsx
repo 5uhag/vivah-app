@@ -20,9 +20,9 @@ const profile = {
   religion: "Hindu",
   caste: "Brahmin",
   profession: "Software Engineer",
-  education: "B.Tech – Computer Science, IIT Bombay",
+  education: "B.Tech - Computer Science, IIT Bombay",
   employer: "Infosys Technologies",
-  salary: "₹18 LPA",
+  salary: "Rs 18 LPA",
   height: "5'4\"",
   about:
     "I am a fun-loving, career-oriented woman who values family deeply. I enjoy cooking, reading, and traveling. Looking for a kind, ambitious partner who respects both tradition and modernity.",
@@ -59,11 +59,11 @@ export default function ProfilePage() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-pink-950/40" />
       </div>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-black/40 backdrop-blur-md border-b border-white/10">
+      <nav className="sticky top-0 z-50 bg-pink-950/40 backdrop-blur-md border-b border-white/10">
         <div className="max-w-5xl mx-auto px-4 flex items-center h-14 gap-3">
           <Link href="/" className="text-white/70 hover:text-white transition">
             <ArrowLeft className="w-5 h-5" />
@@ -74,10 +74,10 @@ export default function ProfilePage() {
 
       <div className="max-w-5xl mx-auto px-4 py-8 w-full">
         {/* Profile Header Card */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 mb-6">
+        <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-6 items-start">
             {/* Photo */}
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 shrink-0" style={{ borderColor: "#F39C12" }}>
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 shrink-0" style={{ borderColor: "#F8A4C8" }}>
               <Image
                 src={profile.profilePhoto}
                 alt={profile.name}
@@ -91,16 +91,16 @@ export default function ProfilePage() {
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <h1 className="text-2xl font-bold text-white">{profile.name}</h1>
                 {profile.isVerified && (
-                  <CheckCircle className="w-5 h-5" style={{ color: "#F39C12" }} />
+                  <CheckCircle className="w-5 h-5" style={{ color: "#F8A4C8" }} />
                 )}
                 {profile.isPremium && (
-                  <Badge className="text-xs font-medium text-black" style={{ background: "#F39C12" }}>
+                  <Badge className="text-xs font-medium text-black" style={{ background: "#F8A4C8" }}>
                     Premium
                   </Badge>
                 )}
               </div>
               <div className="text-white/70 text-sm mb-1">
-                {profile.age} years · {profile.religion} · {profile.caste}
+                {profile.age} years - {profile.religion} - {profile.caste}
               </div>
               <div className="flex items-center gap-1 text-white/60 text-sm mb-4">
                 <MapPin className="w-4 h-4" />
@@ -113,7 +113,7 @@ export default function ProfilePage() {
                   <span>Profile Completion</span>
                   <span>{profile.completionScore}%</span>
                 </div>
-                <Progress value={profile.completionScore} className="h-2 bg-white/10" />
+                <Progress value={profile.completionScore} className="h-2 bg-white/20" />
               </div>
             </div>
 
@@ -121,18 +121,21 @@ export default function ProfilePage() {
             <div className="flex flex-col gap-3 sm:shrink-0 w-full sm:w-auto">
               <button
                 className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-white font-medium transition hover:opacity-90"
-                style={{ background: "#C0392B" }}
+                style={{ background: "#E91E8C" }}
               >
                 <Heart className="w-4 h-4" />
                 Send Interest
               </button>
-              <button className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-white/30 text-white font-medium hover:bg-white/10 transition">
+              <button
+                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-white font-medium transition hover:opacity-90"
+                style={{ background: "#E91E8C" }}
+              >
                 <MessageCircle className="w-4 h-4" />
                 Chat
               </button>
               <button
                 className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-white font-medium transition hover:opacity-90"
-                style={{ background: "#F39C12" }}
+                style={{ background: "#E91E8C" }}
               >
                 <Phone className="w-4 h-4" />
                 View Contact
@@ -142,13 +145,13 @@ export default function ProfilePage() {
         </div>
 
         {/* Tabs */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 mb-6">
+        <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-6 mb-6">
           <Tabs defaultValue="personal">
-            <TabsList className="bg-white/10 border border-white/10 mb-6">
-              <TabsTrigger value="personal" className="text-white data-[state=active]:bg-[#C0392B] data-[state=active]:text-white">Personal</TabsTrigger>
-              <TabsTrigger value="education" className="text-white data-[state=active]:bg-[#C0392B] data-[state=active]:text-white">Education</TabsTrigger>
-              <TabsTrigger value="job" className="text-white data-[state=active]:bg-[#C0392B] data-[state=active]:text-white">Job</TabsTrigger>
-              <TabsTrigger value="family" className="text-white data-[state=active]:bg-[#C0392B] data-[state=active]:text-white">Family</TabsTrigger>
+            <TabsList className="bg-white/20 border border-white/10 mb-6 backdrop-blur-md">
+              <TabsTrigger value="personal" className="text-white data-[state=active]:bg-[#E91E8C] data-[state=active]:text-white">Personal</TabsTrigger>
+              <TabsTrigger value="education" className="text-white data-[state=active]:bg-[#E91E8C] data-[state=active]:text-white">Education</TabsTrigger>
+              <TabsTrigger value="job" className="text-white data-[state=active]:bg-[#E91E8C] data-[state=active]:text-white">Job</TabsTrigger>
+              <TabsTrigger value="family" className="text-white data-[state=active]:bg-[#E91E8C] data-[state=active]:text-white">Family</TabsTrigger>
             </TabsList>
 
             <TabsContent value="personal" className="space-y-4">
@@ -172,8 +175,8 @@ export default function ProfilePage() {
             </TabsContent>
 
             <TabsContent value="family" className="space-y-4">
-              <Row label="Father" value={`${profile.fatherName} — ${profile.fatherOccupation}`} />
-              <Row label="Mother" value={`${profile.motherName} — ${profile.motherOccupation}`} />
+              <Row label="Father" value={`${profile.fatherName} - ${profile.fatherOccupation}`} />
+              <Row label="Mother" value={`${profile.motherName} - ${profile.motherOccupation}`} />
               <Row label="Siblings" value={profile.siblings} />
               <Row label="Family Type" value={profile.familyType} />
               <Row label="Family Values" value={profile.familyValues} />
@@ -182,7 +185,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Photo Grid */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
+        <div className="rounded-2xl border border-white/10 bg-white/20 backdrop-blur-md p-6">
           <h2 className="text-white font-semibold text-lg mb-4">Photos</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {profile.photos.map((src, i) => (
