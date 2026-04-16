@@ -12,29 +12,50 @@ import { MapPin, SlidersHorizontal, ChevronLeft, ChevronRight, Heart, Sparkles }
 import Navbar from "@/components/Navbar";
 
 const PROFILES = [
-  { id: "1", name: "Ananya Reddy", age: 26, location: "Hyderabad", religion: "Hindu", profession: "Doctor", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=60", compat: 97, ai: true },
-  { id: "2", name: "Pooja Nair", age: 28, location: "Kochi", religion: "Hindu", profession: "Teacher", photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=60", compat: 94, ai: true },
-  { id: "3", name: "Riya Kapoor", age: 25, location: "Delhi", religion: "Hindu", profession: "Designer", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=60", compat: 91, ai: true },
-  { id: "4", name: "Sneha Iyer", age: 29, location: "Chennai", religion: "Hindu", profession: "Engineer", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=60", compat: 88, ai: false },
-  { id: "5", name: "Divya Menon", age: 27, location: "Bangalore", religion: "Hindu", profession: "Lawyer", photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=60", compat: 85, ai: false },
-  { id: "6", name: "Kavya Joshi", age: 24, location: "Pune", religion: "Hindu", profession: "MBA", photo: "https://images.unsplash.com/photo-1524504388940-b1c1722653e8?auto=format&fit=crop&w=400&q=60", compat: 82, ai: false },
-  { id: "7", name: "Meera Pillai", age: 30, location: "Mumbai", religion: "Hindu", profession: "CA", photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=400&q=60", compat: 79, ai: false },
-  { id: "8", name: "Sana Sheikh", age: 26, location: "Lucknow", religion: "Muslim", profession: "Professor", photo: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=400&q=60", compat: 76, ai: false },
-  { id: "9", name: "Preethi Kumar", age: 27, location: "Coimbatore", religion: "Hindu", profession: "Nurse", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=60", compat: 73, ai: false },
-  { id: "10", name: "Nisha Verma", age: 28, location: "Jaipur", religion: "Hindu", profession: "Business", photo: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=400&q=60", compat: 70, ai: false },
+  { id: "1", name: "Ananya Reddy", age: 26, location: "Hyderabad", religion: "Hindu", profession: "Doctor", photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=60", compat: 97, ai: true, gender: "female" },
+  { id: "2", name: "Pooja Nair", age: 28, location: "Kochi", religion: "Hindu", profession: "Teacher", photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=60", compat: 94, ai: true, gender: "female" },
+  { id: "3", name: "Riya Kapoor", age: 25, location: "Delhi", religion: "Hindu", profession: "Designer", photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=60", compat: 91, ai: true, gender: "female" },
+  { id: "4", name: "Sneha Iyer", age: 29, location: "Chennai", religion: "Hindu", profession: "Engineer", photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=60", compat: 88, ai: false, gender: "female" },
+  { id: "5", name: "Divya Menon", age: 27, location: "Bangalore", religion: "Hindu", profession: "Lawyer", photo: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=60", compat: 85, ai: false, gender: "female" },
+  { id: "6", name: "Kavya Joshi", age: 24, location: "Pune", religion: "Hindu", profession: "MBA", photo: "https://images.unsplash.com/photo-1524504388940-b1c1722653e8?auto=format&fit=crop&w=400&q=60", compat: 82, ai: false, gender: "female" },
+  { id: "7", name: "Meera Pillai", age: 30, location: "Mumbai", religion: "Hindu", profession: "CA", photo: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=400&q=60", compat: 79, ai: false, gender: "female" },
+  { id: "8", name: "Sana Sheikh", age: 26, location: "Lucknow", religion: "Muslim", profession: "Professor", photo: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=400&q=60", compat: 76, ai: false, gender: "female" },
+  { id: "9", name: "Preethi Kumar", age: 27, location: "Coimbatore", religion: "Hindu", profession: "Nurse", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=60", compat: 73, ai: false, gender: "female" },
+  { id: "10", name: "Nisha Verma", age: 28, location: "Jaipur", religion: "Hindu", profession: "Business", photo: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=400&q=60", compat: 70, ai: false, gender: "female" },
+  // Male profiles
+  { id: "11", name: "Rahul Sharma", age: 29, location: "Mumbai", religion: "Hindu", profession: "Engineer", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=60", compat: 95, ai: true, gender: "male" },
+  { id: "12", name: "Arjun Mehta", age: 27, location: "Delhi", religion: "Hindu", profession: "Doctor", photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=60", compat: 92, ai: true, gender: "male" },
+  { id: "13", name: "Vikram Singh", age: 31, location: "Bangalore", religion: "Hindu", profession: "Business", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=60", compat: 89, ai: true, gender: "male" },
+  { id: "14", name: "Karthik Nair", age: 28, location: "Chennai", religion: "Hindu", profession: "Lawyer", photo: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&w=400&q=60", compat: 86, ai: false, gender: "male" },
+  { id: "15", name: "Aditya Kumar", age: 26, location: "Hyderabad", religion: "Hindu", profession: "Designer", photo: "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=400&q=60", compat: 83, ai: false, gender: "male" },
+  { id: "16", name: "Rohan Gupta", age: 30, location: "Kolkata", religion: "Hindu", profession: "CA", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=60", compat: 80, ai: false, gender: "male" },
+  { id: "17", name: "Siddharth Patel", age: 25, location: "Ahmedabad", religion: "Hindu", profession: "Engineer", photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&q=60", compat: 77, ai: false, gender: "male" },
+  { id: "18", name: "Imran Khan", age: 28, location: "Lucknow", religion: "Muslim", profession: "Government", photo: "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?auto=format&fit=crop&w=400&q=60", compat: 74, ai: false, gender: "male" },
 ];
 
 const RELIGIONS = ["All", "Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain"];
-const PROFESSIONS = ["All", "Doctor", "Engineer", "Teacher", "Lawyer", "Designer", "Business", "Government"];
+const PROFESSIONS = ["All", "Doctor", "Engineer", "Teacher", "Lawyer", "Designer", "Business", "Government", "CA", "Professor", "Nurse"];
 const PAGE_SIZE = 6;
 
-function FilterPanel({ ageRange, setAgeRange, religion, setReligion, profession, setProfession }: {
+function FilterPanel({ ageRange, setAgeRange, religion, setReligion, profession, setProfession, gender, setGender }: {
   ageRange: number[]; setAgeRange: (v: number[]) => void;
   religion: string; setReligion: (v: string) => void;
   profession: string; setProfession: (v: string) => void;
+  gender: string; setGender: (v: string) => void;
 }) {
   return (
     <div className="space-y-6">
+      <div>
+        <Label className="text-white/80 text-sm mb-2 block">Looking for</Label>
+        <Select value={gender} onValueChange={(v) => setGender(v ?? "All")}>
+          <SelectTrigger className="bg-white/20 border-white/20 text-white"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All">All</SelectItem>
+            <SelectItem value="female">Women</SelectItem>
+            <SelectItem value="male">Men</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <div>
         <Label className="text-white/80 text-sm mb-3 block">Age Range: {ageRange[0]}–{ageRange[1]}</Label>
         <Slider min={18} max={60} step={1} value={ageRange} onValueChange={(v) => setAgeRange(Array.isArray(v) ? [...v] : [v as number])} className="w-full" />
@@ -61,12 +82,14 @@ export default function SearchPage() {
   const [ageRange, setAgeRange] = useState([22, 35]);
   const [religion, setReligion] = useState("All");
   const [profession, setProfession] = useState("All");
+  const [gender, setGender] = useState("All");
   const [page, setPage] = useState(1);
 
   const filtered = PROFILES.filter((p) => {
     if (p.age < ageRange[0] || p.age > ageRange[1]) return false;
     if (religion !== "All" && p.religion !== religion) return false;
     if (profession !== "All" && p.profession !== profession) return false;
+    if (gender !== "All" && p.gender !== gender) return false;
     return true;
   });
 
@@ -89,7 +112,7 @@ export default function SearchPage() {
             <h2 className="text-white font-semibold mb-5 flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4" /> Filters
             </h2>
-            <FilterPanel ageRange={ageRange} setAgeRange={setAgeRange} religion={religion} setReligion={setReligion} profession={profession} setProfession={setProfession} />
+            <FilterPanel ageRange={ageRange} setAgeRange={setAgeRange} religion={religion} setReligion={setReligion} profession={profession} setProfession={setProfession} gender={gender} setGender={setGender} />
           </div>
         </aside>
 
@@ -103,7 +126,7 @@ export default function SearchPage() {
               <SheetContent side="left" className="bg-pink-950/90 backdrop-blur-md border-white/10 w-72">
                 <SheetHeader><SheetTitle className="text-white">Filters</SheetTitle></SheetHeader>
                 <div className="mt-6">
-                  <FilterPanel ageRange={ageRange} setAgeRange={setAgeRange} religion={religion} setReligion={setReligion} profession={profession} setProfession={setProfession} />
+                  <FilterPanel ageRange={ageRange} setAgeRange={setAgeRange} religion={religion} setReligion={setReligion} profession={profession} setProfession={setProfession} gender={gender} setGender={setGender} />
                 </div>
               </SheetContent>
             </Sheet>

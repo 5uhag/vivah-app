@@ -25,6 +25,18 @@ export default function SettingsPage() {
   const [twoFA, setTwoFA] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [showNewPass, setShowNewPass] = useState(false);
+  const [accountSaved, setAccountSaved] = useState(false);
+  const [passSaved, setPassSaved] = useState(false);
+
+  const handleAccountSave = () => {
+    setAccountSaved(true);
+    setTimeout(() => setAccountSaved(false), 2000);
+  };
+
+  const handlePassSave = () => {
+    setPassSaved(true);
+    setTimeout(() => setPassSaved(false), 2000);
+  };
 
   return (
     <TooltipProvider>
@@ -53,8 +65,8 @@ export default function SettingsPage() {
                 <Label className="text-white/70 text-sm mb-1.5 block">Phone Number</Label>
                 <Input defaultValue="+91 98765 43210" className="bg-white/20 border-white/20 text-white" />
               </div>
-              <button className="px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: "#E91E8C" }}>
-                Save Changes
+              <button onClick={handleAccountSave} className="px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: accountSaved ? "#22c55e" : "#E91E8C" }}>
+                {accountSaved ? "Saved ✓" : "Save Changes"}
               </button>
             </div>
           </Section>
@@ -119,8 +131,8 @@ export default function SettingsPage() {
                   </button>
                 </div>
                 <Input type="password" placeholder="Confirm new password" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
-                <button className="px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: "#E91E8C" }}>
-                  Update Password
+                <button onClick={handlePassSave} className="px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: passSaved ? "#22c55e" : "#E91E8C" }}>
+                  {passSaved ? "Updated ✓" : "Update Password"}
                 </button>
               </div>
             </div>

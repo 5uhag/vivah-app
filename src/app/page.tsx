@@ -46,11 +46,11 @@ export default function LandingPage() {
           India&apos;s most trusted matrimonial platform. Lakhs of verified profiles, advanced matching, and a journey that begins with a single click.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/register" className="px-8 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition hover:opacity-90" style={{ background: "#E91E8C" }}>
-            Create Free Profile
+          <Link href="/dashboard" className="px-8 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition hover:opacity-90" style={{ background: "#E91E8C" }}>
+            Dashboard
           </Link>
-          <Link href="/login" className="px-8 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition hover:opacity-90 border border-white/30 hover:bg-white/10">
-            Sign In
+          <Link href="/settings" className="px-8 py-4 text-lg font-semibold text-white rounded-full shadow-lg transition hover:opacity-90 border border-white/30 hover:bg-white/10">
+            Settings
           </Link>
         </div>
       </section>
