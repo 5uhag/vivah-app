@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Heart, MessageCircle, Eye, Bell, Search, MapPin, Sparkles, TrendingUp } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useUser } from "@clerk/nextjs";
 
 const STATS = [
   { label: "Profile Views", value: "128", change: "+12 today", icon: Eye, color: "#E91E8C" },
@@ -38,6 +39,9 @@ const QUICK_LINKS = [
 ];
 
 export default function DashboardPage() {
+  const { user } = useUser();
+  const firstName = user?.firstName ?? user?.fullName?.split(" ")[0] ?? "there";
+
   return (
     <div className="relative min-h-screen flex flex-col">
       <div className="fixed inset-0 -z-10">
@@ -49,7 +53,7 @@ export default function DashboardPage() {
 
       <div className="max-w-7xl mx-auto px-4 py-8 w-full space-y-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">Welcome back, Priya 👋</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">Welcome back, {firstName} 👋</h1>
           <p className="text-white/60 text-sm">You have 3 new interests and 2 unread messages today.</p>
         </div>
 
