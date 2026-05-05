@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser, useAuth } from "@clerk/nextjs";
+import { createAuthClient } from "@/lib/supabase-auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,7 +26,10 @@ const PHOTO_SLOTS = 4;
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { user } = useUser();
+  const { getToken } = useAuth();
   const [step, setStep] = useState(0);
+  const [saving, setSaving] = useState(false);
   const [photos, setPhotos] = useState<(string | null)[]>(Array(PHOTO_SLOTS).fill(null));
   const [form, setForm] = useState({
     fullName: "", gender: "", dob: "", phone: "", location: "",
@@ -37,8 +42,34 @@ export default function OnboardingPage() {
   const progress = ((step) / STEPS.length) * 100;
   const isLast = step === STEPS.length - 1;
 
-  const handleNext = () => {
-    if (isLast) { router.push("/dashboard"); return; }
+  const handleNext = async () => {
+    if (isLast) {
+      setSaving(true);
+      if (user?.id) {
+        const token = await getToken({ template: "supabase" });
+        if (token) {
+          const client = createAuthClient(token);
+          const filledFields = [form.fullName, form.gender, form.dob, form.phone, form.location, form.religion, form.caste, form.profession, form.education, form.about].filter(Boolean).length;
+          const score = Math.round((filledFields / 10) * 100);
+          await client.from("profiles").update({
+            full_name: form.fullName || null,
+            gender: form.gender || null,
+            dob: form.dob || null,
+            phone: form.phone || null,
+            location: form.location || null,
+            religion: form.religion || null,
+            caste: form.caste || null,
+            profession: form.profession || null,
+            education: form.education || null,
+            about: form.about || null,
+            completion_score: score,
+          }).eq("clerk_id", user.id);
+        }
+      }
+      setSaving(false);
+      router.push("/dashboard");
+      return;
+    }
     setStep((s) => s + 1);
   };
 
@@ -241,11 +272,12 @@ export default function OnboardingPage() {
             )}
             <button
               onClick={handleNext}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-white text-sm font-semibold transition hover:opacity-90"
+              disabled={saving}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full text-white text-sm font-semibold transition hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
               style={{ background: "#E91E8C" }}
             >
               {isLast ? (
-                <><Check className="w-4 h-4" /> Finish & Explore Matches</>
+                saving ? <>Saving…</> : <><Check className="w-4 h-4" /> Finish & Explore Matches</>
               ) : (
                 <>Next <ChevronRight className="w-4 h-4" /></>
               )}

@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Camera, Save, X } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { createAuthClient } from "@/lib/supabase-auth";
 
 const RELIGIONS = ["Hindu", "Muslim", "Christian", "Sikh", "Buddhist", "Jain", "Other"];
 const EDUCATIONS = ["10th", "12th", "Diploma", "B.A.", "B.Com", "B.Sc.", "B.Tech", "M.A.", "M.Tech", "MBA", "PhD", "Other"];
@@ -24,8 +26,90 @@ const PROFESSIONS = ["Software Engineer", "Doctor", "Teacher", "Lawyer", "Busine
 const PHOTO_SLOTS = 6;
 
 export default function EditProfilePage() {
-  const [completionScore] = useState(72);
+  const { user } = useUser();
+  const { getToken } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [completionScore, setCompletionScore] = useState(0);
   const [photos, setPhotos] = useState<(string | null)[]>(Array(PHOTO_SLOTS).fill(null));
+
+  const [form, setForm] = useState({
+    fullName: "", gender: "", dob: "", phone: "", location: "",
+    religion: "", caste: "", height: "", about: "",
+    education: "", college: "", gradYear: "", fieldOfStudy: "",
+    profession: "", employer: "", jobTitle: "", income: "", workLocation: "",
+    fatherName: "", fatherOccupation: "", motherName: "", motherOccupation: "",
+    siblings: "", familyType: "", familyValues: "",
+  });
+
+  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      const token = await getToken({ template: "supabase" });
+      if (!token) { setLoading(false); return; }
+      const client = createAuthClient(token);
+      const { data } = await client
+        .from("profiles")
+        .select("full_name, gender, dob, phone, location, religion, caste, profession, education, about, photos, completion_score")
+        .eq("clerk_id", user.id)
+        .single();
+      if (data) {
+        setForm((f) => ({
+          ...f,
+          fullName: data.full_name ?? "",
+          gender: data.gender ?? "",
+          dob: data.dob ?? "",
+          phone: data.phone ?? "",
+          location: data.location ?? "",
+          religion: data.religion ?? "",
+          caste: data.caste ?? "",
+          profession: data.profession ?? "",
+          education: data.education ?? "",
+          about: data.about ?? "",
+        }));
+        setCompletionScore(data.completion_score ?? 0);
+        if (data.photos?.length) {
+          setPhotos([
+            ...data.photos.slice(0, PHOTO_SLOTS),
+            ...Array(Math.max(0, PHOTO_SLOTS - data.photos.length)).fill(null),
+          ]);
+        }
+      }
+      setLoading(false);
+    })();
+  }, [user?.id, getToken]);
+
+  const handleSave = async () => {
+    if (!user?.id || saving) return;
+    setSaving(true);
+    const token = await getToken({ template: "supabase" });
+    if (!token) { setSaving(false); return; }
+    const client = createAuthClient(token);
+    const filledFields = [form.fullName, form.gender, form.dob, form.phone, form.location, form.religion, form.caste, form.profession, form.education, form.about].filter(Boolean).length;
+    const score = Math.round((filledFields / 10) * 90 + (photos.some(Boolean) ? 10 : 0));
+    const { error } = await client.from("profiles").update({
+      full_name: form.fullName || null,
+      gender: form.gender || null,
+      dob: form.dob || null,
+      phone: form.phone || null,
+      location: form.location || null,
+      religion: form.religion || null,
+      caste: form.caste || null,
+      profession: form.profession || null,
+      education: form.education || null,
+      about: form.about || null,
+      completion_score: score,
+    }).eq("clerk_id", user.id);
+    setSaving(false);
+    if (!error) {
+      setCompletionScore(score);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    }
+  };
 
   const handlePhotoRemove = (i: number) => {
     setPhotos((prev) => prev.map((p, idx) => (idx === i ? null : p)));
@@ -33,7 +117,6 @@ export default function EditProfilePage() {
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      {/* Background */}
       <div className="fixed inset-0 -z-10">
         <Image
           src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1920&q=60"
@@ -48,7 +131,6 @@ export default function EditProfilePage() {
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 py-8 w-full">
-        {/* Mobile Completion */}
         <div className="sm:hidden mb-6 rounded-xl border border-white/10 bg-white/20 backdrop-blur-md p-4">
           <div className="flex justify-between text-sm mb-2">
             <span className="text-white/60">Profile Completion</span>
@@ -76,13 +158,13 @@ export default function EditProfilePage() {
             <TabsContent value="personal" className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Field label="Full Name">
-                  <Input placeholder="Enter full name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.fullName} onChange={(e) => set("fullName", e.target.value)} disabled={loading} placeholder="Enter full name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40 disabled:opacity-50" />
                 </Field>
                 <Field label="Date of Birth">
-                  <Input type="date" className="bg-white/20 border-white/20 text-white" />
+                  <Input type="date" value={form.dob} onChange={(e) => set("dob", e.target.value)} disabled={loading} className="bg-white/20 border-white/20 text-white disabled:opacity-50" />
                 </Field>
                 <Field label="Gender">
-                  <Select>
+                  <Select value={form.gender} onValueChange={(v) => set("gender", v ?? "")}>
                     <SelectTrigger className="bg-white/20 border-white/20 text-white">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
@@ -94,13 +176,13 @@ export default function EditProfilePage() {
                   </Select>
                 </Field>
                 <Field label="Phone">
-                  <Input placeholder="+91 XXXXX XXXXX" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.phone} onChange={(e) => set("phone", e.target.value)} disabled={loading} placeholder="+91 XXXXX XXXXX" className="bg-white/20 border-white/20 text-white placeholder:text-white/40 disabled:opacity-50" />
                 </Field>
                 <Field label="Location">
-                  <Input placeholder="City, State" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.location} onChange={(e) => set("location", e.target.value)} disabled={loading} placeholder="City, State" className="bg-white/20 border-white/20 text-white placeholder:text-white/40 disabled:opacity-50" />
                 </Field>
                 <Field label="Religion">
-                  <Select>
+                  <Select value={form.religion} onValueChange={(v) => set("religion", v ?? "")}>
                     <SelectTrigger className="bg-white/20 border-white/20 text-white">
                       <SelectValue placeholder="Select religion" />
                     </SelectTrigger>
@@ -110,27 +192,23 @@ export default function EditProfilePage() {
                   </Select>
                 </Field>
                 <Field label="Caste">
-                  <Input placeholder="Enter caste" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.caste} onChange={(e) => set("caste", e.target.value)} disabled={loading} placeholder="Enter caste" className="bg-white/20 border-white/20 text-white placeholder:text-white/40 disabled:opacity-50" />
                 </Field>
                 <Field label="Height">
-                  <Input placeholder='e.g. 5&apos;8"' className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.height} onChange={(e) => set("height", e.target.value)} placeholder='e.g. 5&apos;8"' className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
               </div>
               <Field label="About Me">
-                <Textarea
-                  placeholder="Write something about yourself..."
-                  rows={4}
-                  className="bg-white/20 border-white/20 text-white placeholder:text-white/40 resize-none"
-                />
+                <Textarea value={form.about} onChange={(e) => set("about", e.target.value)} disabled={loading} placeholder="Write something about yourself..." rows={4} className="bg-white/20 border-white/20 text-white placeholder:text-white/40 resize-none disabled:opacity-50" />
               </Field>
-              <SaveButton />
+              <SaveButton onClick={handleSave} saving={saving} saved={saved} />
             </TabsContent>
 
             {/* Education Tab */}
             <TabsContent value="education" className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Field label="Highest Education">
-                  <Select>
+                  <Select value={form.education} onValueChange={(v) => set("education", v ?? "")}>
                     <SelectTrigger className="bg-white/20 border-white/20 text-white">
                       <SelectValue placeholder="Select education" />
                     </SelectTrigger>
@@ -140,23 +218,23 @@ export default function EditProfilePage() {
                   </Select>
                 </Field>
                 <Field label="College / University">
-                  <Input placeholder="College or university name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.college} onChange={(e) => set("college", e.target.value)} placeholder="College or university name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Graduation Year">
-                  <Input type="number" placeholder="e.g. 2020" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input type="number" value={form.gradYear} onChange={(e) => set("gradYear", e.target.value)} placeholder="e.g. 2020" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Field of Study">
-                  <Input placeholder="e.g. Computer Science" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.fieldOfStudy} onChange={(e) => set("fieldOfStudy", e.target.value)} placeholder="e.g. Computer Science" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
               </div>
-              <SaveButton />
+              <SaveButton onClick={handleSave} saving={saving} saved={saved} />
             </TabsContent>
 
             {/* Job Tab */}
             <TabsContent value="job" className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Field label="Profession">
-                  <Select>
+                  <Select value={form.profession} onValueChange={(v) => set("profession", v ?? "")}>
                     <SelectTrigger className="bg-white/20 border-white/20 text-white">
                       <SelectValue placeholder="Select profession" />
                     </SelectTrigger>
@@ -166,41 +244,41 @@ export default function EditProfilePage() {
                   </Select>
                 </Field>
                 <Field label="Employer / Company">
-                  <Input placeholder="Company name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.employer} onChange={(e) => set("employer", e.target.value)} placeholder="Company name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Job Title">
-                  <Input placeholder="e.g. Senior Engineer" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.jobTitle} onChange={(e) => set("jobTitle", e.target.value)} placeholder="e.g. Senior Engineer" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Annual Income">
-                  <Input placeholder="e.g. Rs 12 LPA" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.income} onChange={(e) => set("income", e.target.value)} placeholder="e.g. Rs 12 LPA" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Work Location">
-                  <Input placeholder="City where you work" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.workLocation} onChange={(e) => set("workLocation", e.target.value)} placeholder="City where you work" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
               </div>
-              <SaveButton />
+              <SaveButton onClick={handleSave} saving={saving} saved={saved} />
             </TabsContent>
 
             {/* Family Tab */}
             <TabsContent value="family" className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Field label="Father's Name">
-                  <Input placeholder="Father's full name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.fatherName} onChange={(e) => set("fatherName", e.target.value)} placeholder="Father's full name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Father's Occupation">
-                  <Input placeholder="e.g. Business" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.fatherOccupation} onChange={(e) => set("fatherOccupation", e.target.value)} placeholder="e.g. Business" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Mother's Name">
-                  <Input placeholder="Mother's full name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.motherName} onChange={(e) => set("motherName", e.target.value)} placeholder="Mother's full name" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Mother's Occupation">
-                  <Input placeholder="e.g. Homemaker" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.motherOccupation} onChange={(e) => set("motherOccupation", e.target.value)} placeholder="e.g. Homemaker" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Siblings">
-                  <Input placeholder="e.g. 1 brother, 1 sister" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
+                  <Input value={form.siblings} onChange={(e) => set("siblings", e.target.value)} placeholder="e.g. 1 brother, 1 sister" className="bg-white/20 border-white/20 text-white placeholder:text-white/40" />
                 </Field>
                 <Field label="Family Type">
-                  <Select>
+                  <Select value={form.familyType} onValueChange={(v) => set("familyType", v ?? "")}>
                     <SelectTrigger className="bg-white/20 border-white/20 text-white">
                       <SelectValue placeholder="Select family type" />
                     </SelectTrigger>
@@ -211,7 +289,7 @@ export default function EditProfilePage() {
                   </Select>
                 </Field>
                 <Field label="Family Values">
-                  <Select>
+                  <Select value={form.familyValues} onValueChange={(v) => set("familyValues", v ?? "")}>
                     <SelectTrigger className="bg-white/20 border-white/20 text-white">
                       <SelectValue placeholder="Select values" />
                     </SelectTrigger>
@@ -223,7 +301,7 @@ export default function EditProfilePage() {
                   </Select>
                 </Field>
               </div>
-              <SaveButton />
+              <SaveButton onClick={handleSave} saving={saving} saved={saved} />
             </TabsContent>
 
             {/* Photos Tab */}
@@ -276,7 +354,7 @@ export default function EditProfilePage() {
                   </div>
                 ))}
               </div>
-              <SaveButton />
+              <SaveButton onClick={handleSave} saving={saving} saved={saved} />
             </TabsContent>
           </Tabs>
         </div>
@@ -294,17 +372,18 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function SaveButton() {
+function SaveButton({ onClick, saving, saved }: { onClick: () => void; saving: boolean; saved: boolean }) {
   return (
     <div className="pt-2">
       <button
-        className="flex items-center gap-2 px-6 py-2.5 rounded-full text-white font-medium transition hover:opacity-90"
-        style={{ background: "#E91E8C" }}
+        onClick={onClick}
+        disabled={saving}
+        className="flex items-center gap-2 px-6 py-2.5 rounded-full text-white font-medium transition hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed"
+        style={{ background: saved ? "#22c55e" : "#E91E8C" }}
       >
         <Save className="w-4 h-4" />
-        Save Changes
+        {saved ? "Saved ✓" : saving ? "Saving…" : "Save Changes"}
       </button>
     </div>
   );
 }
-

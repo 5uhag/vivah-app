@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -14,8 +15,15 @@ import {
 } from "@/components/ui/tooltip";
 import { Shield, Bell, Lock, Trash2, Eye, EyeOff, Wifi, KeyRound } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { createAuthClient } from "@/lib/supabase-auth";
 
 export default function SettingsPage() {
+  const { user } = useUser();
+  const { getToken } = useAuth();
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const [hideProfile, setHideProfile] = useState(false);
   const [showOnline, setShowOnline] = useState(true);
   const [emailNotifs, setEmailNotifs] = useState(true);
@@ -28,9 +36,48 @@ export default function SettingsPage() {
   const [accountSaved, setAccountSaved] = useState(false);
   const [passSaved, setPassSaved] = useState(false);
 
-  const handleAccountSave = () => {
-    setAccountSaved(true);
-    setTimeout(() => setAccountSaved(false), 2000);
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      const token = await getToken({ template: "supabase" });
+      if (!token) { setLoading(false); return; }
+      const client = createAuthClient(token);
+      const { data } = await client
+        .from("profiles")
+        .select("full_name, phone, is_hidden, online_status")
+        .eq("clerk_id", user.id)
+        .single();
+      if (data) {
+        setFullName(data.full_name ?? "");
+        setPhone(data.phone ?? "");
+        setHideProfile(data.is_hidden ?? false);
+        setShowOnline(data.online_status ?? true);
+      }
+      setLoading(false);
+    })();
+  }, [user?.id, getToken]);
+
+  const handleAccountSave = async () => {
+    if (!user?.id) return;
+    const token = await getToken({ template: "supabase" });
+    if (!token) return;
+    const client = createAuthClient(token);
+    const { error } = await client
+      .from("profiles")
+      .update({ full_name: fullName, phone })
+      .eq("clerk_id", user.id);
+    if (!error) {
+      setAccountSaved(true);
+      setTimeout(() => setAccountSaved(false), 2000);
+    }
+  };
+
+  const updatePrivacy = async (field: string, value: boolean) => {
+    if (!user?.id) return;
+    const token = await getToken({ template: "supabase" });
+    if (!token) return;
+    const client = createAuthClient(token);
+    await client.from("profiles").update({ [field]: value }).eq("clerk_id", user.id);
   };
 
   const handlePassSave = () => {
@@ -55,17 +102,17 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <div>
                 <Label className="text-white/70 text-sm mb-1.5 block">Full Name</Label>
-                <Input defaultValue="Priya Sharma" className="bg-white/20 border-white/20 text-white" />
+                <Input value={fullName} onChange={(e) => setFullName(e.target.value)} disabled={loading} className="bg-white/20 border-white/20 text-white disabled:opacity-50" />
               </div>
               <div>
                 <Label className="text-white/70 text-sm mb-1.5 block">Email Address</Label>
-                <Input defaultValue="priya.sharma@email.com" className="bg-white/20 border-white/20 text-white" />
+                <Input value={user?.primaryEmailAddress?.emailAddress ?? ""} readOnly disabled className="bg-white/20 border-white/20 text-white opacity-60 cursor-not-allowed" />
               </div>
               <div>
                 <Label className="text-white/70 text-sm mb-1.5 block">Phone Number</Label>
-                <Input defaultValue="+91 98765 43210" className="bg-white/20 border-white/20 text-white" />
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} disabled={loading} className="bg-white/20 border-white/20 text-white disabled:opacity-50" />
               </div>
-              <button onClick={handleAccountSave} className="px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90" style={{ background: accountSaved ? "#22c55e" : "#E91E8C" }}>
+              <button onClick={handleAccountSave} disabled={loading} className="px-5 py-2 rounded-full text-white text-sm font-medium transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed" style={{ background: accountSaved ? "#22c55e" : "#E91E8C" }}>
                 {accountSaved ? "Saved ✓" : "Save Changes"}
               </button>
             </div>
@@ -79,7 +126,7 @@ export default function SettingsPage() {
                 desc="Your profile won't appear in search results"
                 icon={<EyeOff className="w-4 h-4 text-white/40" />}
                 checked={hideProfile}
-                onCheckedChange={setHideProfile}
+                onCheckedChange={(v) => { setHideProfile(v); updatePrivacy("is_hidden", v); }}
               />
               <Separator className="bg-white/10" />
               <ToggleRow
@@ -87,7 +134,7 @@ export default function SettingsPage() {
                 desc="Let others see when you're active"
                 icon={<Wifi className="w-4 h-4 text-white/40" />}
                 checked={showOnline}
-                onCheckedChange={setShowOnline}
+                onCheckedChange={(v) => { setShowOnline(v); updatePrivacy("online_status", v); }}
               />
             </div>
           </Section>
