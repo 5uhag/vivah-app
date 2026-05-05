@@ -97,10 +97,43 @@ SUPABASE_SERVICE_ROLE_KEY=
 | `subscriptions` | `id`, `user_id→profiles`, `plan`, `razorpay_order_id`, `expires_at` |
 | `profile_views` | `id`, `viewer_id→profiles`, `viewed_id→profiles`, `viewed_at` |
 
-## Supabase Clients (`src/lib/supabase.ts`)
-- `supabase` — browser client (nullable, use in `"use client"` components)
-- `supabaseAdmin` — server/admin client (nullable, use in Server Components / API routes)
-- Both return `null` if env vars are not set (safe for build without env)
+## Supabase Clients
+- `src/lib/supabase.ts` — `supabase` (browser, nullable) and `supabaseAdmin` (server/admin, nullable). Both return `null` if env vars not set.
+- `src/lib/supabase-auth.ts` — `createAuthClient(token)` — creates a Supabase client with a Clerk JWT in the `Authorization` header. Use this in all `"use client"` components that read/write user data so RLS policies work correctly. Get the token with `const token = await getToken({ template: "supabase" })` from `useAuth()`.
+
+## Auth Pattern for Data Saving (Client Components)
+```ts
+const { user } = useUser();
+const { getToken } = useAuth();
+
+const token = await getToken({ template: "supabase" }); // requires Clerk JWT template named "supabase"
+if (!token) return;
+const client = createAuthClient(token);
+await client.from("profiles").update({ ... }).eq("clerk_id", user.id);
+```
+- Never use the plain `supabase` browser client for authenticated writes — RLS will block it
+- Always use `createAuthClient(token)` for any user-specific read/write
+
+## Deployment
+- **Live URL:** https://pyaarmatch.vercel.app
+- **Repo:** https://github.com/5uhag/vivah-app
+- Vercel auto-deploys on push to `main`
+- All env vars must be set in Vercel dashboard (Settings → Environment Variables) — `.env.local` is local only
+
+## Infrastructure Setup (Completed)
+- Clerk webhook registered at `https://pyaarmatch.vercel.app/api/webhooks/clerk` — events: `user.created`, `user.deleted`
+- Supabase schema applied (`supabase/schema.sql`) — all tables and RLS policies exist
+- Clerk JWT template named `supabase` configured with Supabase JWT secret — required for authenticated Supabase calls
+- `SUPABASE_SERVICE_ROLE_KEY` is the service role JWT (used by `supabaseAdmin` in webhook route)
+
+## Known Limitations / Not Yet Wired
+- Family tab fields (father/mother/siblings/family type/values) have no DB columns — controlled in UI state but don't persist
+- Job tab extra fields (employer, job title, income, work location) have no DB columns — UI only
+- `height` and `college` fields have no DB columns — UI only
+- Photo uploads use `URL.createObjectURL()` for local preview only — not uploaded to Supabase Storage yet
+- Dashboard shows hardcoded mock data (stats, matches, online users) — not yet reading from DB
+- Razorpay is a placeholder `alert()` in `/subscription`
+- 2FA toggle in settings is UI only — not wired to Clerk
 
 ## Key Conventions
 - Server Components by default; add `"use client"` when using state, events, or browser APIs
@@ -108,9 +141,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 - `Slider.onValueChange` callback receives `number | readonly number[]` — cast with `Array.isArray(v) ? [...v] : [v as number]`
 - `DialogTrigger` / `TooltipTrigger` do NOT support `asChild` — apply className directly
 - Images from Unsplash require `next.config.ts` remote pattern for `images.unsplash.com`
-- Photo uploads use `URL.createObjectURL()` for preview; wire to Supabase Storage `profile-photos` bucket when connecting backend
 - Razorpay: placeholder `alert()` in `/subscription` — replace with Razorpay SDK order creation
-- Clerk webhook secret must be set as `CLERK_WEBHOOK_SECRET` in env and registered in Clerk dashboard
 
 ## Project Structure
 ```
